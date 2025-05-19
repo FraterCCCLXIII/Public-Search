@@ -1,0 +1,11 @@
+== Setting up YaCy ==
+****************** YaCy Web Crawler/Indexer & Search Engine *******************
+**** (C) by Michael Peter Christen, usage granted under the GPL Version 2  ****
+****   USE AT YOUR OWN RISK! Project home and releases: https://yacy.net/  ****
+**  LOG of       YaCy: DATA/LOG/yacy00.log (and yacy<xx>.log)                **
+**  STOP         YaCy: execute stopYACY.sh and wait some seconds             **
+**  GET HELP for YaCy: join our community at https://community.searchlab.eu  **
+*******************************************************************************
+ >> YaCy started as daemon process. Administration at http://localhost:8090 << 
+Opening http://localhost:8090
+Please open http://localhost:8090 in your browser.

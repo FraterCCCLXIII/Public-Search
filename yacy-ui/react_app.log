@@ -1,0 +1,11 @@
+
+> yacy-ui@0.1.0 start
+> vite --port 12000 --host 0.0.0.0
+
+Port 12000 is in use, trying another one...
+
+  VITE v4.5.2  ready in 253 ms
+
+  ➜  Local:   http://localhost:12001/
+  ➜  Network: http://10.2.103.32:12001/
+  ➜  press h to show help

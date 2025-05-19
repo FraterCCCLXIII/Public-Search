@@ -93,10 +93,18 @@ interface FilterOptions {
 
 type SortOption = 'relevance' | 'date' | 'size';
 
-const SearchResults: React.FC = () => {
+interface SearchResultsProps {
+  initialQuery?: string;
+  initialType?: string;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = ({ 
+  initialQuery = '', 
+  initialType = 'web' 
+}) => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('q') || '';
-  const searchType = searchParams.get('type') || 'web';
+  const query = initialQuery || searchParams.get('q') || '';
+  const searchType = initialType || searchParams.get('type') || 'web';
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

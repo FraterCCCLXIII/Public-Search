@@ -27,11 +27,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     localStorage.setItem('theme', themeType);
   }, [themeType]);
 
-  // Our three theme colors
+  // Monochromatic theme colors
   const themeColors = {
-    primary: '#0066cc',    // Blue
-    secondary: '#34c759',  // Green
-    accent: '#ff9500'      // Orange
+    primary: '#333333',    // Dark gray
+    secondary: '#666666',  // Medium gray
+    accent: '#999999'      // Light gray
   };
 
   const getDesignTokens = (mode: ThemeType) => {
@@ -56,29 +56,60 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 8,
+            borderRadius: 24, // Full rounded buttons
             padding: '8px 16px',
+            boxShadow: 'none',
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
+          root: {
+            boxShadow: 'none',
+            borderRadius: 8,
+          },
           rounded: {
-            borderRadius: 12,
+            borderRadius: 8,
           },
         },
       },
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 12,
+            boxShadow: 'none',
+            borderRadius: 8,
+            border: mode === 'light' ? '1px solid #eeeeee' : 
+                    mode === 'dark' ? '1px solid #333333' : 
+                    '1px solid #e6dfd0',
           },
         },
       },
       MuiChip: {
         styleOverrides: {
           root: {
-            borderRadius: 6,
+            borderRadius: 24, // Full rounded chips
+          },
+        },
+      },
+      MuiAppBar: {
+        styleOverrides: {
+          root: {
+            boxShadow: 'none',
+            backgroundColor: mode === 'light' ? '#f5f7fa' : 
+                            mode === 'dark' ? '#121212' : 
+                            '#f8f0e3',
+            borderBottom: mode === 'light' ? '1px solid #eeeeee' : 
+                          mode === 'dark' ? '1px solid #333333' : 
+                          '1px solid #e6dfd0',
+          },
+        },
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 24, // Full rounded search bar
+            },
           },
         },
       },

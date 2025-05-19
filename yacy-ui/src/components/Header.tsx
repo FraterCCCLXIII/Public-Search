@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AppBar, 
   Toolbar, 
@@ -11,17 +11,56 @@ import {
   Divider,
   Switch,
   FormControlLabel,
-  Tooltip
+  Tooltip,
+  TextField,
+  InputAdornment,
+  Tabs,
+  Tab
 } from '@mui/material';
 import ThemeToggle from './ThemeToggle';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SecurityIcon from '@mui/icons-material/Security';
+import SearchIcon from '@mui/icons-material/Search';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  showSearchInHeader?: boolean;
+  initialSearchQuery?: string;
+  initialSearchType?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ 
+  showSearchInHeader = false, 
+  initialSearchQuery = '', 
+  initialSearchType = 'web' 
+}) => {
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [allowExternalSearch, setAllowExternalSearch] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [searchType, setSearchType] = useState(initialSearchType);
+  const [scrolled, setScrolled] = useState(false);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Check if we're on the home page
+  const isHomePage = location.pathname === '/';
+  
+  // Handle scroll events to show/hide logo on home page
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 100) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
     setSettingsAnchorEl(event.currentTarget);
@@ -36,24 +75,91 @@ const Header: React.FC = () => {
     // In a real implementation, this would save the setting to localStorage or a backend API
     localStorage.setItem('allowExternalSearch', (!allowExternalSearch).toString());
   };
+  
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}&type=${searchType}`);
+    }
+  };
+  
+  const handleSearchTypeChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setSearchType(newValue);
+    // If we have a query, immediately search with the new type
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}&type=${newValue}`);
+    }
+  };
 
   return (
     <AppBar position="static" elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-      <Toolbar>
-        <Typography
-          variant="h6"
-          component={Link}
-          to="/"
-          sx={{
-            flexGrow: 1,
-            textDecoration: 'none',
-            color: 'inherit',
-            fontWeight: 'bold',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          Public
-        </Typography>
+      <Toolbar sx={{ flexWrap: 'wrap' }}>
+        {/* Only show logo on home page when scrolled, or always on other pages */}
+        {(!isHomePage || scrolled) && (
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: 'none',
+              color: 'inherit',
+              fontWeight: 'bold',
+              letterSpacing: '-0.5px',
+              mr: 2,
+            }}
+          >
+            Public
+          </Typography>
+        )}
+        
+        {/* Search bar in header for search results page */}
+        {showSearchInHeader && (
+          <Box 
+            component="form" 
+            onSubmit={handleSearchSubmit}
+            sx={{ 
+              flexGrow: 1, 
+              display: 'flex', 
+              flexDirection: 'column',
+              width: '100%',
+              maxWidth: 600
+            }}
+          >
+            <TextField
+              fullWidth
+              placeholder="Search the web..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ mb: 1 }}
+            />
+            <Tabs 
+              value={searchType} 
+              onChange={handleSearchTypeChange}
+              sx={{ 
+                minHeight: 36,
+                '& .MuiTab-root': {
+                  minHeight: 36,
+                  py: 0
+                }
+              }}
+            >
+              <Tab label="Web" value="web" />
+              <Tab label="Images" value="image" />
+              <Tab label="Files" value="file" />
+            </Tabs>
+          </Box>
+        )}
+        
+        {/* Spacer when search is not shown */}
+        {!showSearchInHeader && <Box sx={{ flexGrow: 1 }} />}
+        
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Button 
             component={Link} 

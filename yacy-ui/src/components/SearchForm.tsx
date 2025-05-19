@@ -55,12 +55,14 @@ const SearchForm: React.FC = () => {
       }}
     >
       <Paper
-        elevation={3}
+        elevation={0}
         sx={{
           p: '2px 4px',
           display: 'flex',
           alignItems: 'center',
-          borderRadius: 4,
+          borderRadius: 24, // Full rounded search bar
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <InputBase
@@ -84,12 +86,14 @@ const SearchForm: React.FC = () => {
           size="small"
           sx={{ 
             '& .MuiToggleButtonGroup-grouped': {
-              border: 0,
+              border: '1px solid',
+              borderColor: 'divider',
               '&:not(:first-of-type)': {
-                borderRadius: 1,
+                borderRadius: 24,
+                ml: 1,
               },
               '&:first-of-type': {
-                borderRadius: 1,
+                borderRadius: 24,
               },
               mx: 0.5,
               px: 1.5,

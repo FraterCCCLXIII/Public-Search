@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
             mb: 2,
           }}
         >
-          YaCy Search
+          Public Search
         </Typography>
         <Typography
           variant="h6"
@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
           color="text.secondary"
           sx={{ mb: 4 }}
         >
-          Decentralized Search for the Free Web
+          A Private Search Engine for the Free Web
         </Typography>
         <SearchForm />
       </Box>

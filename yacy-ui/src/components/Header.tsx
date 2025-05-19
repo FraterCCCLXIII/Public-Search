@@ -18,7 +18,7 @@ const Header: React.FC = () => {
             fontWeight: 'bold',
           }}
         >
-          YaCy Search
+          Public Search
         </Typography>
         <Box>
           <ThemeToggle />

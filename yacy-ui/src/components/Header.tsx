@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 import ThemeToggle from './ThemeToggle';
 import { Link } from 'react-router-dom';
 
@@ -18,9 +18,20 @@ const Header: React.FC = () => {
             fontWeight: 'bold',
           }}
         >
-          Public Search
+          Public
         </Typography>
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Button 
+            component={Link} 
+            to="/about" 
+            color="inherit" 
+            sx={{ mr: 2 }}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '4px', fontSize: '1.2rem' }}>
+              info
+            </span>
+            About
+          </Button>
           <ThemeToggle />
         </Box>
       </Toolbar>

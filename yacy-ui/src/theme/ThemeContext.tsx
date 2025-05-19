@@ -26,16 +26,26 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     localStorage.setItem('theme', themeType);
   }, [themeType]);
 
+  // Our three theme colors
+  const themeColors = {
+    primary: '#0066cc',    // Blue
+    secondary: '#34c759',  // Green
+    accent: '#ff9500'      // Orange
+  };
+
   const getDesignTokens = (mode: ThemeType) => {
     if (mode === 'light') {
       return {
         palette: {
           mode: 'light' as PaletteMode,
           primary: {
-            main: '#1976d2',
+            main: themeColors.primary,
           },
           secondary: {
-            main: '#dc004e',
+            main: themeColors.secondary,
+          },
+          accent: {
+            main: themeColors.accent,
           },
           background: {
             default: '#f5f5f5',
@@ -48,10 +58,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         palette: {
           mode: 'dark' as PaletteMode,
           primary: {
-            main: '#90caf9',
+            main: themeColors.primary,
           },
           secondary: {
-            main: '#f48fb1',
+            main: themeColors.secondary,
+          },
+          accent: {
+            main: themeColors.accent,
           },
           background: {
             default: '#121212',
@@ -65,10 +78,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         palette: {
           mode: 'light' as PaletteMode,
           primary: {
-            main: '#795548',
+            main: themeColors.primary,
           },
           secondary: {
-            main: '#607d8b',
+            main: themeColors.secondary,
+          },
+          accent: {
+            main: themeColors.accent,
           },
           background: {
             default: '#f8f0e3',

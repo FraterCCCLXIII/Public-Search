@@ -5,6 +5,7 @@ import { ThemeProvider } from './theme/ThemeContext';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
+import AboutPage from './pages/AboutPage';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/about" element={<AboutPage />} />
             </Routes>
           </Box>
         </Box>

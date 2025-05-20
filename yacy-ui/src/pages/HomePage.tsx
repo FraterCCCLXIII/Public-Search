@@ -107,9 +107,33 @@ const HomePage: React.FC = () => {
             </Button>
           </Box>
           
-          <Typography variant="body2" color="text.secondary">
-            Privacy-focused, decentralized search powered by YaCy
-          </Typography>
+          <Box sx={{ maxWidth: 600, mt: 4, textAlign: 'center' }}>
+            <Typography variant="h6" gutterBottom>
+              About Public
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Public is a privacy-focused, decentralized search engine built on peer-to-peer technology. 
+              Unlike traditional search engines, Public doesn't track your searches or build a profile about you.
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Our network of independent nodes works together to index the web, creating a search experience 
+              that's resistant to censorship and control by any single entity.
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <Button 
+                href="/about" 
+                color="primary" 
+                size="small"
+                sx={{ 
+                  textTransform: 'none',
+                  fontWeight: 'medium',
+                  mt: 1
+                }}
+              >
+                Learn more about Public
+              </Button>
+            </Typography>
+          </Box>
         </Box>
       </Container>
     </>

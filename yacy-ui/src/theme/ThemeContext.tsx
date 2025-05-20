@@ -79,7 +79,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
             boxShadow: 'none',
             borderRadius: 8,
             border: mode === 'light' ? '1px solid #eeeeee' : 
-                    mode === 'dark' ? '1px solid #333333' : 
+                    mode === 'dark' ? '1px solid #444444' : 
                     '1px solid #e6dfd0',
           },
         },
@@ -99,7 +99,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
                             mode === 'dark' ? '#121212' : 
                             '#f8f0e3',
             borderBottom: mode === 'light' ? '1px solid #eeeeee' : 
-                          mode === 'dark' ? '1px solid #333333' : 
+                          mode === 'dark' ? '1px solid #444444' : 
                           '1px solid #e6dfd0',
           },
         },

@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Typography, Box, Button, Paper, Grid, Divider, useTheme as useMuiTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '../theme/ThemeContext';
+import Header from '../components/Header';
 
 const AboutPage: React.FC = () => {
   const { themeType } = useTheme();
@@ -15,25 +16,132 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <Typography variant="h2" component="h1" gutterBottom>
-          About Public
-        </Typography>
-        <Typography variant="h5" component="h2" color="text.secondary" paragraph>
-          A private, decentralized search engine for the free web
-        </Typography>
-      </Box>
+    <>
+      <Header showSearchInHeader={false} />
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography variant="h2" component="h1" gutterBottom>
+            About Public
+          </Typography>
+          <Typography variant="h5" component="h2" color="text.secondary" paragraph>
+            A private, decentralized search engine for the free web
+          </Typography>
+        </Box>
+        
+        {/* Three-column navigation section */}
+        <Grid container spacing={4} sx={{ mb: 6 }}>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ 
+              p: 3, 
+              height: '100%', 
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider',
+              textAlign: 'center'
+            }}>
+              <Typography variant="h5" component="h3" gutterBottom>
+                Mission & Values
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Learn about our commitment to privacy, decentralization, and an open web.
+              </Typography>
+              <Button 
+                variant="outlined" 
+                color="primary"
+                sx={{ 
+                  borderRadius: 24,
+                  textTransform: 'none',
+                  mt: 2
+                }}
+                onClick={() => {
+                  const element = document.getElementById('mission-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Learn More
+              </Button>
+            </Paper>
+          </Grid>
+          
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ 
+              p: 3, 
+              height: '100%', 
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider',
+              textAlign: 'center'
+            }}>
+              <Typography variant="h5" component="h3" gutterBottom>
+                Technology
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Discover how our peer-to-peer search technology works and why it matters.
+              </Typography>
+              <Button 
+                variant="outlined" 
+                color="primary"
+                sx={{ 
+                  borderRadius: 24,
+                  textTransform: 'none',
+                  mt: 2
+                }}
+                onClick={() => {
+                  const element = document.getElementById('technology-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Explore
+              </Button>
+            </Paper>
+          </Grid>
+          
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ 
+              p: 3, 
+              height: '100%', 
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider',
+              textAlign: 'center'
+            }}>
+              <Typography variant="h5" component="h3" gutterBottom>
+                Get Involved
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Join our community and help build a better search experience for everyone.
+              </Typography>
+              <Button 
+                variant="outlined" 
+                color="primary"
+                sx={{ 
+                  borderRadius: 24,
+                  textTransform: 'none',
+                  mt: 2
+                }}
+                onClick={() => {
+                  const element = document.getElementById('contribute-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Join Us
+              </Button>
+            </Paper>
+          </Grid>
+        </Grid>
 
       {/* Mission Section */}
-      <Paper elevation={0} sx={{ 
-        p: 4, 
-        mb: 6, 
-        borderRadius: 2, 
-        bgcolor: 'background.paper',
-        border: 1,
-        borderColor: 'divider'
-      }}>
+      <Paper 
+        id="mission-section"
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          mb: 6, 
+          borderRadius: 2, 
+          bgcolor: 'background.paper',
+          border: 1,
+          borderColor: 'divider'
+        }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Our Mission
         </Typography>
@@ -51,14 +159,17 @@ const AboutPage: React.FC = () => {
       </Paper>
 
       {/* P2P Technology Section */}
-      <Paper elevation={0} sx={{ 
-        p: 4, 
-        mb: 6, 
-        borderRadius: 2, 
-        bgcolor: 'background.paper',
-        border: 1,
-        borderColor: 'divider'
-      }}>
+      <Paper 
+        id="technology-section"
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          mb: 6, 
+          borderRadius: 2, 
+          bgcolor: 'background.paper',
+          border: 1,
+          borderColor: 'divider'
+        }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Peer-to-Peer Search Technology
         </Typography>
@@ -203,7 +314,7 @@ docker-compose up -d`}
       </Paper>
 
       {/* Contribute Section */}
-      <Box sx={{ mb: 6 }}>
+      <Box id="contribute-section" sx={{ mb: 6 }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Contribute to Public
         </Typography>

@@ -66,7 +66,11 @@ const SearchForm: React.FC = () => {
         }}
       >
         <InputBase
-          sx={{ ml: 1, flex: 1 }}
+          sx={{ 
+            ml: 1, 
+            flex: 1,
+            padding: '10px 14px', // Make search field same height as buttons
+          }}
           placeholder={`Search ${searchType === 'web' ? 'the P2P Web' : searchType === 'image' ? 'for images' : 'for files'}...`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}

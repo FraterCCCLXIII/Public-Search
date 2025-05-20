@@ -4,7 +4,7 @@ import socketserver
 import os
 
 # Set the port based on the environment
-PORT = 12000  # Using the first available port from runtime information
+PORT = 12001  # Using the second available port from runtime information
 
 class CORSHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -20,7 +20,7 @@ def run_server():
     # Allow the server to be accessed from any host
     with socketserver.TCPServer(("0.0.0.0", PORT), handler) as httpd:
         print(f"Server running at http://0.0.0.0:{PORT}/")
-        print(f"You can access it at https://work-1-vvhjvfkphsxavgqy.prod-runtime.all-hands.dev")
+        print(f"You can access it at https://work-2-fvyunpcypjmjnbik.prod-runtime.all-hands.dev")
         httpd.serve_forever()
 
 if __name__ == "__main__":

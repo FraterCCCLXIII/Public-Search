@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme, Theme } from '@mui/material/styles';
 import { PaletteMode } from '@mui/material';
-import '@fontsource/inter';
+// Using Google Fonts instead of @fontsource/inter
 
 type ThemeType = 'light' | 'dark' | 'sepia';
 

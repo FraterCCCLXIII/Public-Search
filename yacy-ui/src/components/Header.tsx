@@ -164,7 +164,7 @@ const Header: React.FC<HeaderProps> = ({
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
                   color: 'text.primary',
-                  padding: '10px 14px',
+                  height: '56px', // Match the height of the search button on homepage
                   '&.MuiOutlinedInput-root': {
                     '& fieldset': {
                       borderColor: 'transparent',
@@ -179,6 +179,7 @@ const Header: React.FC<HeaderProps> = ({
                 }
               }}
               variant="outlined"
+              size="medium"
             />
           </Box>
         )}

@@ -76,6 +76,9 @@ chmod +x setup.sh
 # Install dependencies
 npm install
 
+# Note: The project uses Google Fonts for the Inter font family
+# No need to install @fontsource/inter package
+
 # Start the development server
 npm start
 ```
@@ -161,7 +164,7 @@ public-search/
 - **Routing**: React Router for navigation between pages
 - **API Integration**: Axios for HTTP requests to YaCy backend
 - **Styling**: Material UI's styling system with theme customization
-- **Typography**: Inter font family for modern, readable text
+- **Typography**: Inter font family from Google Fonts for modern, readable text
 
 ### Component Structure
 - **App.tsx**: Main application component with routing
@@ -240,7 +243,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - [YaCy](https://yacy.net/) for the decentralized search engine
 - [React](https://reactjs.org/) and [Material UI](https://mui.com/) for the UI framework
-- [Inter Font](https://rsms.me/inter/) for the typography
+- [Inter Font](https://fonts.google.com/specimen/Inter) from Google Fonts for the typography
 - All contributors who have helped shape this project
 
 ---

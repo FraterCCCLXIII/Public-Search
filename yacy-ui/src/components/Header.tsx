@@ -164,7 +164,7 @@ const Header: React.FC<HeaderProps> = ({
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
                   color: 'text.primary',
-                  height: theme => theme.spacing(4), // 32px (0.5rem × 8 = 4 spacing units)
+                  height: '2.5rem', // 40px (2.5rem)
                   '&.MuiOutlinedInput-root': {
                     '& fieldset': {
                       borderColor: 'transparent',

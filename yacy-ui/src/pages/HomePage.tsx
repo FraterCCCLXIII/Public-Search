@@ -75,7 +75,7 @@ const HomePage: React.FC = () => {
                   border: '1px solid',
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
-                  height: theme => theme.spacing(4), // 32px (0.5rem × 8 = 4 spacing units)
+                  height: '2.5rem', // 40px (2.5rem)
                   '&.MuiOutlinedInput-root': {
                     '& fieldset': {
                       borderColor: 'transparent',
@@ -100,7 +100,7 @@ const HomePage: React.FC = () => {
               sx={{ 
                 borderRadius: 24,
                 px: 4,
-                height: theme => theme.spacing(4), // Match search field height
+                height: '2.5rem', // 40px (2.5rem)
                 textTransform: 'none'
               }}
             >

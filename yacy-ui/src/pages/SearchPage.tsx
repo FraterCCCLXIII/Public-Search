@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Container } from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
+import Header from '../components/Header';
 import SearchResults from '../components/SearchResults';
-import { useLocation } from 'react-router-dom';
 
 const SearchPage: React.FC = () => {
-  const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState('web');
-  
-  // Parse query parameters from URL
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const query = searchParams.get('q') || '';
-    const type = searchParams.get('type') || 'web';
-    
-    setSearchQuery(query);
-    setSearchType(type);
-  }, [location.search]);
-  
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q') || '';
+  const searchType = searchParams.get('type') || 'web';
+
   return (
-    <Container maxWidth="lg" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
-      <Box sx={{ py: 2 }}>
-        <SearchResults initialQuery={searchQuery} initialType={searchType} />
-      </Box>
-    </Container>
+    <>
+      <Header 
+        showSearchInHeader={true} 
+        initialSearchQuery={query}
+        initialSearchType={searchType}
+      />
+      <Container maxWidth="lg">
+        <Box sx={{ py: 2 }}>
+          <SearchResults 
+            initialQuery={query}
+            initialType={searchType}
+          />
+        </Box>
+      </Container>
+    </>
   );
 };
 

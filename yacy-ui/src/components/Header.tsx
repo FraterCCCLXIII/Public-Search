@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Box, 
-  Button, 
-  Menu, 
-  MenuItem, 
-  IconButton, 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
   Divider,
   Switch,
   FormControlLabel,
@@ -32,25 +32,25 @@ interface HeaderProps {
   initialSearchType?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  showSearchInHeader = false, 
-  initialSearchQuery = '', 
-  initialSearchType = 'web' 
+const Header: React.FC<HeaderProps> = ({
+  showSearchInHeader = false,
+  initialSearchQuery = '',
+  initialSearchType = 'web'
 }) => {
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [allowExternalSearch, setAllowExternalSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [searchType, setSearchType] = useState(initialSearchType);
   const [scrolled, setScrolled] = useState(false);
-  
+
   const location = useLocation();
   const navigate = useNavigate();
   const { themeType } = useTheme();
   const muiTheme = useMuiTheme();
-  
+
   // Check if we're on the home page
   const isHomePage = location.pathname === '/';
-  
+
   // Handle scroll events to show/hide logo on home page
   useEffect(() => {
     const handleScroll = () => {
@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({
         setScrolled(false);
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -79,14 +79,14 @@ const Header: React.FC<HeaderProps> = ({
     // In a real implementation, this would save the setting to localStorage or a backend API
     localStorage.setItem('allowExternalSearch', (!allowExternalSearch).toString());
   };
-  
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}&type=${searchType}`);
     }
   };
-  
+
   const handleSearchTypeChange = (_event: React.SyntheticEvent, newValue: string) => {
     setSearchType(newValue);
     // If we have a query, immediately search with the new type
@@ -96,16 +96,16 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <AppBar 
-      position="static" 
-      elevation={0} 
-      sx={{ 
-        borderBottom: '1px solid', 
+    <AppBar
+      position="static"
+      elevation={0}
+      sx={{
+        borderBottom: '1px solid',
         borderColor: 'divider',
         color: muiTheme.palette.text.primary
       }}
     >
-      <Toolbar sx={{ 
+      <Toolbar sx={{
         flexWrap: 'wrap',
         display: 'grid',
         gridTemplateColumns: showSearchInHeader ? '1fr minmax(auto, 600px) 1fr' : '1fr auto',
@@ -129,14 +129,14 @@ const Header: React.FC<HeaderProps> = ({
             </Typography>
           )}
         </Box>
-        
+
         {/* Center section - Search bar in header for search results page */}
         {showSearchInHeader && (
-          <Box 
-            component="form" 
+          <Box
+            component="form"
             onSubmit={handleSearchSubmit}
-            sx={{ 
-              display: 'flex', 
+            sx={{
+              display: 'flex',
               flexDirection: 'column',
               width: '100%',
               justifySelf: 'center'
@@ -175,12 +175,12 @@ const Header: React.FC<HeaderProps> = ({
               variant="outlined"
               sx={{ mb: 1 }}
             />
-            <Tabs 
-              value={searchType} 
+            <Tabs
+              value={searchType}
               onChange={handleSearchTypeChange}
               textColor="primary"
               indicatorColor="primary"
-              sx={{ 
+              sx={{
                 minHeight: 36,
                 '& .MuiTab-root': {
                   minHeight: 36,
@@ -198,17 +198,17 @@ const Header: React.FC<HeaderProps> = ({
             </Tabs>
           </Box>
         )}
-        
+
         {/* Right section - Navigation and settings */}
-        <Box sx={{ 
-          display: 'flex', 
+        <Box sx={{
+          display: 'flex',
           alignItems: 'center',
           justifySelf: 'end'
         }}>
-          <Button 
-            component={Link} 
-            to="/about" 
-            sx={{ 
+          <Button
+            component={Link}
+            to="/about"
+            sx={{
               mr: 1,
               color: muiTheme.palette.text.primary
             }}
@@ -218,13 +218,13 @@ const Header: React.FC<HeaderProps> = ({
             </span>
             About
           </Button>
-          
+
           <Tooltip title="YaCy Admin Panel">
             <Button
               href="http://localhost:8090/ConfigBasic.html"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ 
+              sx={{
                 mr: 1,
                 color: muiTheme.palette.text.primary
               }}
@@ -233,11 +233,11 @@ const Header: React.FC<HeaderProps> = ({
               Admin
             </Button>
           </Tooltip>
-          
+
           <Tooltip title="Settings">
-            <IconButton 
+            <IconButton
               onClick={handleSettingsClick}
-              sx={{ 
+              sx={{
                 mr: 1,
                 color: muiTheme.palette.text.primary
               }}
@@ -245,11 +245,11 @@ const Header: React.FC<HeaderProps> = ({
               <SettingsIcon />
             </IconButton>
           </Tooltip>
-          
+
           <ThemeToggle />
         </Box>
       </Toolbar>
-      
+
       {/* Settings Menu */}
       <Menu
         anchorEl={settingsAnchorEl}
@@ -257,7 +257,7 @@ const Header: React.FC<HeaderProps> = ({
         onClose={handleSettingsClose}
         PaperProps={{
           elevation: 3,
-          sx: { 
+          sx: {
             minWidth: 250,
             borderRadius: 2,
             mt: 1
@@ -271,8 +271,8 @@ const Header: React.FC<HeaderProps> = ({
         <MenuItem>
           <FormControlLabel
             control={
-              <Switch 
-                checked={allowExternalSearch} 
+              <Switch
+                checked={allowExternalSearch}
                 onChange={handleExternalSearchToggle}
                 color="primary"
               />

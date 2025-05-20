@@ -1,0 +1,10 @@
+{
+  "name": "public-search",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd public && npm start",
+    "build": "./build-vercel.sh",
+    "install": "cd public && npm install"
+  }
+}

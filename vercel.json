@@ -1,6 +1,9 @@
 {
-  "framework": "vite",
-  "installCommand": "cd public && npm install",
-  "buildCommand": "cd public && npm run build",
-  "outputDirectory": "public/dist"
+  "version": 2,
+  "buildCommand": "./build-vercel.sh",
+  "outputDirectory": "dist",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
 }

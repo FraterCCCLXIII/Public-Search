@@ -15,7 +15,8 @@ import {
   TextField,
   InputAdornment,
   Tabs,
-  Tab
+  Tab,
+  useTheme as useMuiTheme
 } from '@mui/material';
 import ThemeToggle from './ThemeToggle';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -23,6 +24,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SecurityIcon from '@mui/icons-material/Security';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTheme } from '../theme/ThemeContext';
 
 interface HeaderProps {
   showSearchInHeader?: boolean;
@@ -43,6 +45,8 @@ const Header: React.FC<HeaderProps> = ({
   
   const location = useLocation();
   const navigate = useNavigate();
+  const { themeType } = useTheme();
+  const muiTheme = useMuiTheme();
   
   // Check if we're on the home page
   const isHomePage = location.pathname === '/';
@@ -92,7 +96,15 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <AppBar position="static" elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+    <AppBar 
+      position="static" 
+      elevation={0} 
+      sx={{ 
+        borderBottom: '1px solid', 
+        borderColor: 'divider',
+        color: muiTheme.palette.text.primary
+      }}
+    >
       <Toolbar sx={{ flexWrap: 'wrap' }}>
         {/* Only show logo on home page when scrolled, or always on other pages */}
         {(!isHomePage || scrolled) && (
@@ -164,8 +176,10 @@ const Header: React.FC<HeaderProps> = ({
           <Button 
             component={Link} 
             to="/about" 
-            color="inherit" 
-            sx={{ mr: 1 }}
+            sx={{ 
+              mr: 1,
+              color: muiTheme.palette.text.primary
+            }}
           >
             <span className="material-symbols-outlined" style={{ marginRight: '4px', fontSize: '1.2rem' }}>
               info
@@ -175,11 +189,13 @@ const Header: React.FC<HeaderProps> = ({
           
           <Tooltip title="YaCy Admin Panel">
             <Button
-              color="inherit"
               href="http://localhost:8090/ConfigBasic.html"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ mr: 1 }}
+              sx={{ 
+                mr: 1,
+                color: muiTheme.palette.text.primary
+              }}
             >
               <AdminPanelSettingsIcon sx={{ mr: 0.5, fontSize: '1.2rem' }} />
               Admin
@@ -188,9 +204,11 @@ const Header: React.FC<HeaderProps> = ({
           
           <Tooltip title="Settings">
             <IconButton 
-              color="inherit" 
               onClick={handleSettingsClick}
-              sx={{ mr: 1 }}
+              sx={{ 
+                mr: 1,
+                color: muiTheme.palette.text.primary
+              }}
             >
               <SettingsIcon />
             </IconButton>

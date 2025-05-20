@@ -12,6 +12,7 @@ import {
   CardContent,
   Chip,
   IconButton,
+  Button,
   Tooltip,
   Menu,
   MenuItem,
@@ -647,11 +648,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
       {/* Image Search Results */}
       {searchType === 'image' && (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} disableEqualOverflow>
           {results.map((result, index) => {
             const imgResult = result as ImageSearchResult;
             return (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid xs={12} sm={6} lg={4} key={index}>
                 <Card 
                   sx={{ 
                     height: '100%', 

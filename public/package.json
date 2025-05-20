@@ -27,7 +27,7 @@
   "scripts": {
     "start": "vite --port 12000 --host 0.0.0.0",
     "build": "vite build",
-    "vercel-build": "vite build",
+    "vercel-build": "vite build && cp vercel.json dist/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

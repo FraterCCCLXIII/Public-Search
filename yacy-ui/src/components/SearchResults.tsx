@@ -1,20 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Link, CircularProgress, Alert } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Paper,
+  Link,
+  CircularProgress,
+  Alert,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Chip,
+  IconButton,
+  Button,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Divider,
+  Badge,
+  Snackbar,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+  useTheme as useMuiTheme
+} from '@mui/material';
+import { useTheme } from '../theme/ThemeContext';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import {
+  Description as DescriptionIcon,
+  PictureAsPdf as PdfIcon,
+  Code as CodeIcon,
+  AudioFile as AudioIcon,
+  VideoFile as VideoIcon,
+  Archive as ArchiveIcon,
+  InsertDriveFile as GenericFileIcon,
+  Bookmark as BookmarkIcon,
+  BookmarkBorder as BookmarkBorderIcon,
+  ThumbUp as ThumbUpIcon,
+  ThumbDown as ThumbDownIcon,
+  Delete as DeleteIcon,
+  FilterList as FilterListIcon,
+  Sort as SortIcon,
+  MoreVert as MoreVertIcon
+} from '@mui/icons-material';
 
-interface SearchResult {
+interface WebSearchResult {
   title: string;
   link: string;
   description: string;
+  id?: string;
+  pubDate?: string;
+  size?: string;
+  host?: string;
+  isBookmarked?: boolean;
+  isBlacklisted?: boolean;
 }
 
-const SearchResults: React.FC = () => {
+interface ImageSearchResult {
+  title: string;
+  link: string;
+  image: string;
+  width?: number;
+  height?: number;
+  size?: string;
+  id?: string;
+  pubDate?: string;
+  host?: string;
+  isBookmarked?: boolean;
+  isBlacklisted?: boolean;
+}
+
+interface FileSearchResult {
+  title: string;
+  link: string;
+  description: string;
+  fileType: string;
+  fileSize?: string;
+  lastModified?: string;
+  id?: string;
+  host?: string;
+  isBookmarked?: boolean;
+  isBlacklisted?: boolean;
+}
+
+type SearchResult = WebSearchResult | ImageSearchResult | FileSearchResult;
+
+interface FilterOptions {
+  dateRange: string;
+  fileType: string;
+  domain: string;
+  language: string;
+}
+
+type SortOption = 'relevance' | 'date' | 'size';
+
+interface SearchResultsProps {
+  initialQuery?: string;
+  initialType?: string;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = ({
+  initialQuery = '',
+  initialType = 'web'
+}) => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('q') || '';
+  const query = initialQuery || searchParams.get('q') || '';
+  const searchType = initialType || searchParams.get('type') || 'web';
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [totalResults, setTotalResults] = useState<number>(0);
+  const [bookmarkedItems, setBookmarkedItems] = useState<Set<string>>(new Set());
+  const [blacklistedItems, setBlacklistedItems] = useState<Set<string>>(new Set());
+  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
+  const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
+  const [currentSort, setCurrentSort] = useState<SortOption>('relevance');
+  const [filters, setFilters] = useState<FilterOptions>({
+    dateRange: 'any',
+    fileType: 'any',
+    domain: 'any',
+    language: 'any'
+  });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const { themeType } = useTheme();
+  const muiTheme = useMuiTheme();
 
   useEffect(() => {
     const fetchResults = async () => {

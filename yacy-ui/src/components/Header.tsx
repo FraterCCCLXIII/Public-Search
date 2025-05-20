@@ -164,7 +164,7 @@ const Header: React.FC<HeaderProps> = ({
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
                   color: 'text.primary',
-                  height: '56px', // Match the height of the search button on homepage
+                  height: theme => theme.spacing(4), // 32px (0.5rem × 8 = 4 spacing units)
                   '&.MuiOutlinedInput-root': {
                     '& fieldset': {
                       borderColor: 'transparent',

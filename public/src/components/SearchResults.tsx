@@ -453,7 +453,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                           `${imageResult.width}×${imageResult.height}` : ''}
                       </Typography>
                       <Box>
-                        <IconButton size="small" sx={{ p: 0.5 }}>
+                        <IconButton size="small" sx={{ p: 0.5, color: themeType === 'dark' ? 'white' : 'inherit' }}>
                           <BookmarkBorderIcon fontSize="small" />
                         </IconButton>
                       </Box>
@@ -508,7 +508,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({
               <Box sx={{ display: 'flex', ml: 1 }}>
                 <Tooltip title="Bookmark">
                   <IconButton 
-                    size="small" 
+                    size="small"
+                    sx={{ color: themeType === 'dark' ? 'white' : 'inherit' }}
                     onClick={() => {
                       const id = result.id || result.link;
                       const newBookmarked = new Set(bookmarkedItems);
@@ -533,6 +534,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 <Tooltip title="Blacklist">
                   <IconButton 
                     size="small"
+                    sx={{ color: themeType === 'dark' ? 'white' : 'inherit' }}
                     onClick={() => {
                       const id = result.id || result.link;
                       const newBlacklisted = new Set(blacklistedItems);
@@ -549,19 +551,19 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   >
                     <ThumbDownIcon 
                       fontSize="small" 
-                      color={blacklistedItems.has(result.id || result.link) ? "error" : "inherit"} 
+                      color={blacklistedItems.has(result.id || result.link) ? "error" : (themeType === 'dark' ? "white" : "inherit")} 
                     />
                   </IconButton>
                 </Tooltip>
                 
                 <Tooltip title="Recommend">
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: themeType === 'dark' ? 'white' : 'inherit' }}>
                     <ThumbUpIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 
                 <Tooltip title="Delete">
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: themeType === 'dark' ? 'white' : 'inherit' }}>
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>

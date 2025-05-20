@@ -661,6 +661,172 @@ docker-compose up -d`}
           Start Searching
         </Button>
       </Box>
+
+      {/* Roadmap Section */}
+      <Paper 
+        id="roadmap-section"
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          mb: 6, 
+          borderRadius: 2, 
+          bgcolor: 'background.paper',
+          border: 1,
+          borderColor: 'divider'
+        }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Our Roadmap
+        </Typography>
+        <Typography variant="body1" paragraph>
+          Public is building an open ecosystem of peer-to-peer and blockchain-based technologies. Our vision extends beyond search to create a comprehensive suite of decentralized tools and services.
+        </Typography>
+        <Typography variant="body1" paragraph>
+          We are currently prototyping with available technologies such as YaCy for search, while developing our own solutions for a truly decentralized web experience.
+        </Typography>
+        
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Our Ecosystem Vision:
+          </Typography>
+          <Grid container spacing={3} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.primary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    search
+                  </span>
+                  Decentralized Search
+                </Typography>
+                <Typography variant="body2">
+                  Building on YaCy's foundation to create a fully distributed search index with enhanced privacy and relevance.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.secondary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    description
+                  </span>
+                  Document Collaboration
+                </Typography>
+                <Typography variant="body2">
+                  Peer-to-peer document creation, editing, and sharing without centralized storage or control.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.tertiary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    folder
+                  </span>
+                  Distributed File Storage
+                </Typography>
+                <Typography variant="body2">
+                  Secure, encrypted file storage across the network with no single point of failure.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.primary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    mail
+                  </span>
+                  Decentralized Mail
+                </Typography>
+                <Typography variant="body2">
+                  End-to-end encrypted email alternative that doesn't rely on centralized servers or providers.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.secondary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    forum
+                  </span>
+                  P2P Messaging
+                </Typography>
+                <Typography variant="body2">
+                  Direct, encrypted messaging without intermediaries or surveillance.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.tertiary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    groups
+                  </span>
+                  Social Media
+                </Typography>
+                <Typography variant="body2">
+                  Community-owned social platforms where users control their data and content.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.primary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    map
+                  </span>
+                  Decentralized Maps
+                </Typography>
+                <Typography variant="body2">
+                  Community-maintained mapping services free from commercial interests and tracking.
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={4}>
+              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 2, height: '100%' }}>
+                <Typography variant="subtitle1" component="h4" gutterBottom sx={{ fontWeight: 'bold', color: themeColors.secondary }}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>
+                    how_to_vote
+                  </span>
+                  Blockchain Voting
+                </Typography>
+                <Typography variant="body2">
+                  Secure, transparent, and verifiable voting systems for communities and organizations.
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Join Our Journey
+          </Typography>
+          <Typography variant="body1" paragraph>
+            We're in the early stages of this ambitious roadmap, and we invite developers, privacy advocates, and users to join us in building this decentralized ecosystem. By starting with search, we're laying the foundation for a more open, private, and user-controlled internet.
+          </Typography>
+          <Button 
+            variant="outlined" 
+            color="primary"
+            sx={{ 
+              borderRadius: 24,
+              textTransform: 'none',
+              mt: 2
+            }}
+            onClick={() => {
+              const element = document.getElementById('contribute-section');
+              element?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            Get Involved
+          </Button>
+        </Box>
+      </Paper>
     </Container>
   </>
   );

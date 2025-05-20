@@ -30,8 +30,30 @@ export interface SearXNGResponse {
   unresponsive_engines: string[];
 }
 
+// SearXNG instance configuration
+export interface SearXNGConfig {
+  useExternal: boolean;
+  localUrl: string;
+  externalUrl: string;
+}
+
 // Default SearXNG instance URL - using localhost for local installation
-const DEFAULT_SEARXNG_URL = 'http://localhost:8888';
+const DEFAULT_LOCAL_SEARXNG_URL = 'http://localhost:8888';
+
+// Default configuration
+export const DEFAULT_SEARXNG_CONFIG: SearXNGConfig = {
+  useExternal: false,
+  localUrl: DEFAULT_LOCAL_SEARXNG_URL,
+  externalUrl: 'https://searx.be' // Example of a public SearXNG instance
+};
+
+// Get the active SearXNG URL based on configuration
+export const getActiveSearXNGUrl = (config: SearXNGConfig = DEFAULT_SEARXNG_CONFIG): string => {
+  return config.useExternal ? config.externalUrl : config.localUrl;
+};
+
+// Default SearXNG instance URL - will be determined by configuration
+const DEFAULT_SEARXNG_URL = DEFAULT_LOCAL_SEARXNG_URL;
 
 export interface SearXNGSearchParams {
   q: string;
@@ -46,12 +68,27 @@ export interface SearXNGSearchParams {
 
 export const searchSearXNG = async (
   params: SearXNGSearchParams,
-  instanceUrl: string = DEFAULT_SEARXNG_URL
+  config?: SearXNGConfig | string
 ): Promise<SearXNGResponse> => {
   try {
     // Set format to JSON to get structured data
     params.format = 'json';
     
+    // Determine the instance URL based on the provided config or string
+    let instanceUrl: string;
+    
+    if (typeof config === 'string') {
+      // If a string is provided, use it directly as the instance URL
+      instanceUrl = config;
+    } else if (config) {
+      // If a config object is provided, get the active URL based on the config
+      instanceUrl = getActiveSearXNGUrl(config);
+    } else {
+      // Use the default configuration
+      instanceUrl = getActiveSearXNGUrl(DEFAULT_SEARXNG_CONFIG);
+    }
+    
+    console.log(`Searching SearXNG at: ${instanceUrl}`);
     const response = await axios.get(`${instanceUrl}/search`, { params });
     return response.data;
   } catch (error) {

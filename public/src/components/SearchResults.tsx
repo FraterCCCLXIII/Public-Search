@@ -25,7 +25,13 @@ import {
   SelectChangeEvent,
   useTheme as useMuiTheme,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField
 } from '@mui/material';
 import { useTheme } from '../theme/ThemeContext';
 import axios from 'axios';
@@ -45,9 +51,17 @@ import {
   Delete as DeleteIcon,
   FilterList as FilterListIcon,
   Sort as SortIcon,
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
+  Settings as SettingsIcon
 } from '@mui/icons-material';
-import { searchSearXNG, convertSearXNGResults, SearXNGSearchParams } from '../services/searxng';
+import { 
+  searchSearXNG, 
+  convertSearXNGResults, 
+  SearXNGSearchParams, 
+  SearXNGConfig, 
+  DEFAULT_SEARXNG_CONFIG,
+  getActiveSearXNGUrl
+} from '../services/searxng';
 
 interface WebSearchResult {
   title: string;
@@ -122,6 +136,17 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   );
   const [yacyResults, setYacyResults] = useState<SearchResult[]>([]);
   const [searxngResults, setSearxngResults] = useState<SearchResult[]>([]);
+  
+  // SearXNG configuration state
+  const [searxngConfig, setSearxngConfig] = useState<SearXNGConfig>({
+    ...DEFAULT_SEARXNG_CONFIG,
+    // Try to load from localStorage if available
+    externalUrl: localStorage.getItem('searxngExternalUrl') || DEFAULT_SEARXNG_CONFIG.externalUrl,
+    useExternal: localStorage.getItem('searxngUseExternal') === 'true'
+  });
+  
+  // Dialog state for SearXNG settings
+  const [searxngSettingsOpen, setSearxngSettingsOpen] = useState(false);
   
   const [bookmarkedItems, setBookmarkedItems] = useState<Set<string>>(new Set());
   const [blacklistedItems, setBlacklistedItems] = useState<Set<string>>(new Set());
@@ -288,8 +313,14 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         searxParams.time_range = 'year';
       }
       
-      // Execute search
-      const response = await searchSearXNG(searxParams);
+      // Get the active SearXNG URL based on configuration
+      const activeUrl = getActiveSearXNGUrl(searxngConfig);
+      
+      // Show which instance we're using in the console
+      console.log(`Using SearXNG instance: ${activeUrl} (${searxngConfig.useExternal ? 'External' : 'Local'})`);
+      
+      // Execute search with the configuration
+      const response = await searchSearXNG(searxParams, searxngConfig);
       
       if (response && response.results) {
         // Convert SearXNG results to our format
@@ -308,7 +339,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     } catch (err) {
       console.error('Error fetching SearXNG search results:', err);
       if (searchProvider === 'searxng') {
-        setError('Failed to fetch SearXNG search results. Make sure SearXNG is running.');
+        const instanceType = searxngConfig.useExternal ? 'external' : 'local';
+        const instanceUrl = searxngConfig.useExternal ? searxngConfig.externalUrl : searxngConfig.localUrl;
+        setError(`Failed to fetch SearXNG search results from ${instanceType} instance (${instanceUrl}). ${searxngConfig.useExternal ? 'The external instance may be unavailable or blocking requests.' : 'Make sure SearXNG is running locally.'}`);
       }
     }
   };
@@ -364,6 +397,54 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const handleProviderChange = (event: SelectChangeEvent) => {
     setSearchProvider(event.target.value as 'yacy' | 'searxng' | 'both');
   };
+  
+  // Handle SearXNG settings dialog open
+  const handleOpenSearxngSettings = () => {
+    setSearxngSettingsOpen(true);
+  };
+  
+  // Handle SearXNG settings dialog close
+  const handleCloseSearxngSettings = () => {
+    setSearxngSettingsOpen(false);
+  };
+  
+  // Handle SearXNG external URL change
+  const handleExternalUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = event.target.value;
+    setSearxngConfig({
+      ...searxngConfig,
+      externalUrl: newUrl
+    });
+  };
+  
+  // Handle SearXNG use external toggle
+  const handleUseExternalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const useExternal = event.target.checked;
+    setSearxngConfig({
+      ...searxngConfig,
+      useExternal
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('searxngUseExternal', useExternal.toString());
+  };
+  
+  // Handle save SearXNG settings
+  const handleSaveSearxngSettings = () => {
+    // Save to localStorage
+    localStorage.setItem('searxngExternalUrl', searxngConfig.externalUrl);
+    localStorage.setItem('searxngUseExternal', searxngConfig.useExternal.toString());
+    
+    // Close dialog
+    setSearxngSettingsOpen(false);
+    
+    // Show success message
+    setSnackbarMessage(`SearXNG settings saved. Using ${searxngConfig.useExternal ? 'external' : 'local'} instance.`);
+    setSnackbarOpen(true);
+    
+    // Refresh results with new settings
+    fetchResults();
+  };
 
   if (!query) {
     return (
@@ -398,7 +479,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       )}
 
       {/* Search Provider Selector */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, alignItems: 'center' }}>
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel id="search-provider-label">Search Provider</InputLabel>
           <Select
@@ -414,7 +495,77 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             <MenuItem value="both">Both</MenuItem>
           </Select>
         </FormControl>
+        
+        {/* SearXNG Settings Button - only show when SearXNG is selected */}
+        {(searchProvider === 'searxng' || searchProvider === 'both') && (
+          <Tooltip title="SearXNG Settings">
+            <IconButton 
+              size="small" 
+              onClick={handleOpenSearxngSettings}
+              sx={{ ml: 1 }}
+            >
+              <SettingsIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
+      
+      {/* SearXNG Settings Dialog */}
+      <Dialog open={searxngSettingsOpen} onClose={handleCloseSearxngSettings}>
+        <DialogTitle>SearXNG Settings</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            Configure SearXNG connection settings. You can use either a local SearXNG instance or connect to an external public instance.
+          </DialogContentText>
+          
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={searxngConfig.useExternal}
+                onChange={handleUseExternalChange}
+                color="primary"
+              />
+            }
+            label="Use External SearXNG Instance"
+            sx={{ mb: 2, display: 'block' }}
+          />
+          
+          <TextField
+            label="External SearXNG URL"
+            fullWidth
+            value={searxngConfig.externalUrl}
+            onChange={handleExternalUrlChange}
+            margin="normal"
+            helperText="Example: https://searx.be or https://search.disroot.org"
+            disabled={!searxngConfig.useExternal}
+          />
+          
+          <TextField
+            label="Local SearXNG URL"
+            fullWidth
+            value={searxngConfig.localUrl}
+            margin="normal"
+            disabled={true}
+            helperText="Local instance URL (configured in docker-compose.yml)"
+          />
+          
+          <Alert severity="info" sx={{ mt: 2 }}>
+            {searxngConfig.useExternal 
+              ? "Using an external instance may provide more diverse results but could have rate limits or privacy concerns."
+              : "Using a local instance provides better privacy but requires running SearXNG locally."}
+          </Alert>
+          
+          {searxngConfig.useExternal && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Some public instances may block API requests. If you encounter errors, try a different instance or use the local setup.
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseSearxngSettings}>Cancel</Button>
+          <Button onClick={handleSaveSearxngSettings} variant="contained">Save</Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Results count and controls */}
       {!loading && !error && results.length > 0 && (

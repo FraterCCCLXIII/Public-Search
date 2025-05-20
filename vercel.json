@@ -1,7 +1,6 @@
 {
-  "buildCommand": "cd public && npm install && npm run build",
-  "outputDirectory": "public/dist",
+  "buildCommand": "cd public && npm install && npm run build && mkdir -p ../app && cp -r dist/* ../app/",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/app/(.*)", "destination": "/app/index.html" }
   ]
 }

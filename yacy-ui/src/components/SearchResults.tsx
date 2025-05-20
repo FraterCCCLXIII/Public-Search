@@ -22,8 +22,10 @@ import {
   FormControl,
   InputLabel,
   Select,
-  SelectChangeEvent
+  SelectChangeEvent,
+  useTheme as useMuiTheme
 } from '@mui/material';
+import { useTheme } from '../theme/ThemeContext';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { 
@@ -123,6 +125,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  
+  const { themeType } = useTheme();
+  const muiTheme = useMuiTheme();
 
   // Load bookmarks and blacklists from localStorage on component mount
   useEffect(() => {
@@ -452,7 +457,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   return (
     <Box sx={{ mt: 4, px: 2, maxWidth: 1000, mx: 'auto' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h5">
+        <Typography variant="h5" color="text.primary">
           {searchType.charAt(0).toUpperCase() + searchType.slice(1)} results for "{query}"
         </Typography>
         
@@ -473,7 +478,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 onClick={handleFilterClick}
                 variant="outlined"
                 size="small"
-                sx={{ mr: 1 }}
+                sx={{ 
+                  mr: 1,
+                  borderRadius: 24,
+                  color: 'text.primary',
+                  borderColor: 'divider'
+                }}
               >
                 Filters
               </Button>
@@ -582,6 +592,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 onClick={handleSortClick}
                 variant="outlined"
                 size="small"
+                sx={{ 
+                  borderRadius: 24,
+                  color: 'text.primary',
+                  borderColor: 'divider'
+                }}
               >
                 Sort: {currentSort.charAt(0).toUpperCase() + currentSort.slice(1)}
               </Button>

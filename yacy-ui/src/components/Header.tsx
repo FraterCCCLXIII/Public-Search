@@ -105,36 +105,41 @@ const Header: React.FC<HeaderProps> = ({
         color: muiTheme.palette.text.primary
       }}
     >
-      <Toolbar sx={{ flexWrap: 'wrap' }}>
-        {/* Only show logo on home page when scrolled, or always on other pages */}
-        {(!isHomePage || scrolled) && (
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{
-              textDecoration: 'none',
-              color: 'inherit',
-              fontWeight: 'bold',
-              letterSpacing: '-0.5px',
-              mr: 2,
-            }}
-          >
-            Public
-          </Typography>
-        )}
+      <Toolbar sx={{ 
+        flexWrap: 'wrap',
+        display: 'grid',
+        gridTemplateColumns: showSearchInHeader ? '1fr minmax(auto, 600px) 1fr' : '1fr auto',
+        alignItems: 'center'
+      }}>
+        {/* Left section - Logo */}
+        <Box sx={{ justifySelf: 'start' }}>
+          {(!isHomePage || scrolled) && (
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={{
+                textDecoration: 'none',
+                color: muiTheme.palette.text.primary,
+                fontWeight: 'bold',
+                letterSpacing: '-0.5px',
+              }}
+            >
+              Public
+            </Typography>
+          )}
+        </Box>
         
-        {/* Search bar in header for search results page */}
+        {/* Center section - Search bar in header for search results page */}
         {showSearchInHeader && (
           <Box 
             component="form" 
             onSubmit={handleSearchSubmit}
             sx={{ 
-              flexGrow: 1, 
               display: 'flex', 
               flexDirection: 'column',
               width: '100%',
-              maxWidth: 600
+              justifySelf: 'center'
             }}
           >
             <TextField
@@ -145,20 +150,45 @@ const Header: React.FC<HeaderProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon color="inherit" />
                   </InputAdornment>
                 ),
+                sx: {
+                  borderRadius: 24, // Full rounded search bar
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  bgcolor: 'background.paper',
+                  color: 'text.primary',
+                  '&.MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'transparent',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'transparent',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'transparent',
+                    },
+                  },
+                }
               }}
+              variant="outlined"
               sx={{ mb: 1 }}
             />
             <Tabs 
               value={searchType} 
               onChange={handleSearchTypeChange}
+              textColor="primary"
+              indicatorColor="primary"
               sx={{ 
                 minHeight: 36,
                 '& .MuiTab-root': {
                   minHeight: 36,
-                  py: 0
+                  py: 0,
+                  color: 'text.primary',
+                  '&.Mui-selected': {
+                    color: 'primary.main',
+                  }
                 }
               }}
             >
@@ -169,10 +199,12 @@ const Header: React.FC<HeaderProps> = ({
           </Box>
         )}
         
-        {/* Spacer when search is not shown */}
-        {!showSearchInHeader && <Box sx={{ flexGrow: 1 }} />}
-        
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* Right section - Navigation and settings */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          justifySelf: 'end'
+        }}>
           <Button 
             component={Link} 
             to="/about" 

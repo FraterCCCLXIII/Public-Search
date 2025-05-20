@@ -1,6 +1,6 @@
 {
-  "buildCommand": "cd public && npm install && npm run build && mkdir -p ../app && cp -r dist/* ../app/",
-  "rewrites": [
-    { "source": "/app/(.*)", "destination": "/app/index.html" }
-  ]
+  "framework": "vite",
+  "installCommand": "cd public && npm install",
+  "buildCommand": "cd public && npm run build",
+  "outputDirectory": "public/dist"
 }

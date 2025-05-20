@@ -23,7 +23,9 @@ import {
   InputLabel,
   Select,
   SelectChangeEvent,
-  useTheme as useMuiTheme
+  useTheme as useMuiTheme,
+  Switch,
+  FormControlLabel
 } from '@mui/material';
 import { useTheme } from '../theme/ThemeContext';
 import axios from 'axios';
@@ -45,6 +47,7 @@ import {
   Sort as SortIcon,
   MoreVert as MoreVertIcon
 } from '@mui/icons-material';
+import { searchSearXNG, convertSearXNGResults, SearXNGSearchParams } from '../services/searxng';
 
 interface WebSearchResult {
   title: string;
@@ -112,6 +115,14 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [totalResults, setTotalResults] = useState<number>(0);
+  
+  // Search provider state
+  const [searchProvider, setSearchProvider] = useState<'yacy' | 'searxng' | 'both'>(
+    searchParams.get('provider') as any || 'yacy'
+  );
+  const [yacyResults, setYacyResults] = useState<SearchResult[]>([]);
+  const [searxngResults, setSearxngResults] = useState<SearchResult[]>([]);
+  
   const [bookmarkedItems, setBookmarkedItems] = useState<Set<string>>(new Set());
   const [blacklistedItems, setBlacklistedItems] = useState<Set<string>>(new Set());
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
@@ -137,13 +148,40 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const paginatedResults = results.slice(startIndex, endIndex);
   const totalPages = Math.ceil(results.length / resultsPerPage);
 
-  // Function to fetch results based on search type
+  // Function to fetch results based on search type and provider
   const fetchResults = async (page = 1) => {
     if (!query) return;
     
     setLoading(true);
     setError(null);
     
+    try {
+      // Reset results
+      setYacyResults([]);
+      setSearxngResults([]);
+      
+      // Fetch from YaCy if selected
+      if (searchProvider === 'yacy' || searchProvider === 'both') {
+        await fetchYacyResults(page);
+      }
+      
+      // Fetch from SearXNG if selected
+      if (searchProvider === 'searxng' || searchProvider === 'both') {
+        await fetchSearxngResults(page);
+      }
+      
+      // Combine and deduplicate results if using both providers
+      combineResults();
+    } catch (err) {
+      console.error('Error fetching search results:', err);
+      setError('Failed to fetch search results. Make sure search engines are running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Function to fetch results from YaCy
+  const fetchYacyResults = async (page = 1) => {
     try {
       // Determine the API endpoint based on search type
       let endpoint = 'http://localhost:8090/yacysearch.json';
@@ -181,31 +219,139 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       
       if (response.data && response.data.channels && response.data.channels[0]) {
         const channel = response.data.channels[0];
-        setResults(channel.items || []);
+        const items = channel.items || [];
         
-        // Set total results count from the response
-        if (channel.totalResults) {
-          setTotalResults(parseInt(channel.totalResults));
-        } else {
-          setTotalResults(channel.items ? channel.items.length : 0);
+        // Add source information to each result
+        const yacyItems = items.map((item: any) => ({
+          ...item,
+          source: 'yacy'
+        }));
+        
+        setYacyResults(yacyItems);
+        
+        // If only using YaCy, update the main results
+        if (searchProvider === 'yacy') {
+          setResults(yacyItems);
+          
+          // Set total results count from the response
+          if (channel.totalResults) {
+            setTotalResults(parseInt(channel.totalResults));
+          } else {
+            setTotalResults(yacyItems.length);
+          }
         }
-      } else {
+      } else if (searchProvider === 'yacy') {
         setResults([]);
         setTotalResults(0);
       }
     } catch (err) {
-      console.error('Error fetching search results:', err);
-      setError('Failed to fetch search results. Make sure YaCy is running.');
-    } finally {
-      setLoading(false);
+      console.error('Error fetching YaCy search results:', err);
+      if (searchProvider === 'yacy') {
+        setError('Failed to fetch YaCy search results. Make sure YaCy is running.');
+      }
+    }
+  };
+  
+  // Function to fetch results from SearXNG
+  const fetchSearxngResults = async (page = 1) => {
+    try {
+      // Create SearXNG search parameters
+      const searxParams: SearXNGSearchParams = {
+        q: query,
+        pageno: page
+      };
+      
+      // Map search type to SearXNG categories
+      if (searchType === 'image') {
+        searxParams.categories = 'images';
+      } else if (searchType === 'video') {
+        searxParams.categories = 'videos';
+      } else if (searchType === 'file') {
+        searxParams.categories = 'files';
+      } else if (searchType === 'news') {
+        searxParams.categories = 'news';
+      } else if (searchType === 'map') {
+        searxParams.categories = 'map';
+      } else {
+        // Default web search
+        searxParams.categories = 'general';
+      }
+      
+      // Map time filter if applicable
+      if (filters.dateRange === 'day') {
+        searxParams.time_range = 'day';
+      } else if (filters.dateRange === 'week') {
+        searxParams.time_range = 'week';
+      } else if (filters.dateRange === 'month') {
+        searxParams.time_range = 'month';
+      } else if (filters.dateRange === 'year') {
+        searxParams.time_range = 'year';
+      }
+      
+      // Execute search
+      const response = await searchSearXNG(searxParams);
+      
+      if (response && response.results) {
+        // Convert SearXNG results to our format
+        const convertedResults = convertSearXNGResults(response.results);
+        setSearxngResults(convertedResults);
+        
+        // If only using SearXNG, update the main results
+        if (searchProvider === 'searxng') {
+          setResults(convertedResults);
+          setTotalResults(response.number_of_results || convertedResults.length);
+        }
+      } else if (searchProvider === 'searxng') {
+        setResults([]);
+        setTotalResults(0);
+      }
+    } catch (err) {
+      console.error('Error fetching SearXNG search results:', err);
+      if (searchProvider === 'searxng') {
+        setError('Failed to fetch SearXNG search results. Make sure SearXNG is running.');
+      }
+    }
+  };
+  
+  // Function to combine results from both providers
+  const combineResults = () => {
+    if (searchProvider === 'both') {
+      // Create a map to deduplicate by URL
+      const urlMap = new Map();
+      
+      // Add YaCy results first
+      yacyResults.forEach(result => {
+        urlMap.set(result.link, { ...result, source: 'yacy' });
+      });
+      
+      // Add SearXNG results, potentially overwriting duplicates
+      searxngResults.forEach(result => {
+        if (!urlMap.has(result.link)) {
+          urlMap.set(result.link, { ...result, source: 'searxng' });
+        }
+      });
+      
+      // Convert map back to array
+      const combinedResults = Array.from(urlMap.values());
+      
+      // Sort combined results by relevance (could be improved)
+      const sortedResults = combinedResults.sort((a, b) => {
+        if (currentSort === 'date' && a.pubDate && b.pubDate) {
+          return new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
+        }
+        return 0;
+      });
+      
+      setResults(sortedResults);
+      setTotalResults(sortedResults.length);
     }
   };
 
-  // Fetch results when query, searchType, currentSort, or page changes
+  // Fetch results when query, searchType, currentSort, searchProvider, or page changes
   useEffect(() => {
     setCurrentPage(1); // Reset to first page when search parameters change
     fetchResults(1);
-  }, [query, searchType, currentSort]);
+  }, [query, searchType, currentSort, searchProvider]);
   
   // Handle page change without resetting to page 1
   useEffect(() => {
@@ -213,6 +359,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       fetchResults(currentPage);
     }
   }, [currentPage]);
+  
+  // Handle search provider change
+  const handleProviderChange = (event: SelectChangeEvent) => {
+    setSearchProvider(event.target.value as 'yacy' | 'searxng' | 'both');
+  };
 
   if (!query) {
     return (
@@ -245,6 +396,25 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           No results found for "{query}"
         </Typography>
       )}
+
+      {/* Search Provider Selector */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <FormControl size="small" sx={{ minWidth: 120 }}>
+          <InputLabel id="search-provider-label">Search Provider</InputLabel>
+          <Select
+            labelId="search-provider-label"
+            id="search-provider-select"
+            value={searchProvider}
+            label="Search Provider"
+            onChange={handleProviderChange}
+            size="small"
+          >
+            <MenuItem value="yacy">YaCy</MenuItem>
+            <MenuItem value="searxng">SearXNG</MenuItem>
+            <MenuItem value="both">Both</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
       {/* Results count and controls */}
       {!loading && !error && results.length > 0 && (
@@ -493,13 +663,23 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 >
                   {result.title || result.link}
                 </Link>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: '0.8rem', mb: 1 }}
-                >
-                  {result.link}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: '0.8rem', flexGrow: 1 }}
+                  >
+                    {result.link}
+                  </Typography>
+                  {result.source && (
+                    <Chip 
+                      label={result.source === 'yacy' ? 'YaCy' : 'SearXNG'} 
+                      size="small" 
+                      color={result.source === 'yacy' ? 'primary' : 'secondary'}
+                      sx={{ ml: 1, height: 20, fontSize: '0.7rem' }}
+                    />
+                  )}
+                </Box>
                 <Typography variant="body2" color="text.primary">
                   {result.description || 'No description available'}
                 </Typography>

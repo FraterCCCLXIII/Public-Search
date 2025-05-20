@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./searxng-data:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8888/
+      - SEARXNG_HOSTNAME=localhost
+    restart: unless-stopped
+    networks:
+      - search-network
+
+  yacy:
+    image: yacy/yacy_search_server:latest
+    container_name: yacy
+    ports:
+      - "8090:8090"
+      - "8443:8443"
+    volumes:
+      - ./yacy-data:/opt/yacy_search_server/DATA
+    environment:
+      - YACY_NETWORK_NAME=PublicSearch
+    restart: unless-stopped
+    networks:
+      - search-network
+
+networks:
+  search-network:
+    driver: bridge

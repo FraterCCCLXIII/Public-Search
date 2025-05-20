@@ -56,7 +56,7 @@ chmod +x setup.sh
 
 ### 3. Set Up and Run the React UI (Enhanced Interface)
 ```bash
-cd yacy-ui
+cd public
 npm install
 npm start
 ```
@@ -90,7 +90,7 @@ python3 server.py
 
 ### User Interface
 - **Theme Switching**: Light, dark, and sepia modes for comfortable viewing
-- **Apple-like Design**: Contemporary, clean interface inspired by modern design principles
+- **Clean Design**: Contemporary, clean interface inspired by modern design principles
 - **Vector Icons**: Material Symbols for consistent, scalable iconography
 - **Responsive Layout**: Adapts to desktop, tablet, and mobile viewports
 - **Accessibility**: Designed with accessibility considerations
@@ -104,22 +104,7 @@ python3 server.py
 
 ### Project Structure
 ```
-public-search/
-├── index.html              # Simple HTML interface
-├── script.js               # JavaScript for simple interface
-├── styles.css              # CSS for simple interface
-├── server.py               # Simple Python server
-├── yacy-ui/                # React UI implementation
-│   ├── public/             # Static assets
-│   ├── src/                # Source code
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Page components
-│   │   ├── theme/          # Theme configuration
-│   │   ├── App.tsx         # Main application component
-│   │   └── main.tsx        # Entry point
-│   ├── package.json        # Dependencies and scripts
-│   └── vite.config.js      # Vite configuration
-└── README.md               # Project documentation
+NEED TO UPDATE
 ```
 
 ### React UI Architecture

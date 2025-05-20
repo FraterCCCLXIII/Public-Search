@@ -56,6 +56,28 @@ Once set up, you can use the search interface with the following options:
 
 To switch between providers, use the dropdown menu in the search results page.
 
+### External SearXNG Instances
+
+As an interim solution, you can connect to an external SearXNG instance instead of running one locally:
+
+1. Select "SearXNG" or "Both" from the provider dropdown
+2. Click the settings icon next to the dropdown
+3. Toggle "Use External SearXNG Instance"
+4. Enter the URL of a public SearXNG instance (e.g., https://searx.be)
+5. Click "Save"
+
+**Note**: When using external instances:
+- Some instances may block API requests or have rate limits
+- Privacy may be reduced compared to a local instance
+- Results may vary between different instances
+
+Popular public SearXNG instances include:
+- https://searx.be
+- https://search.disroot.org
+- https://searx.tiekoetter.com
+
+For a more complete list, visit: https://searx.space/
+
 ## Technical Details
 
 ### Integration Architecture
@@ -107,3 +129,6 @@ If you're not getting results from SearXNG:
 - Add ability to configure which SearXNG engines to use
 - Implement result scoring to better merge results from both providers
 - Add provider-specific filtering options
+- Improve error handling for external SearXNG instances
+- Add ability to manage a list of favorite external instances
+- Implement automatic fallback to external instance if local instance is unavailable

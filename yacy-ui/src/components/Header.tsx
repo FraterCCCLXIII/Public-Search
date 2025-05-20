@@ -107,12 +107,16 @@ const Header: React.FC<HeaderProps> = ({
     >
       <Toolbar sx={{
         flexWrap: 'wrap',
-        display: 'grid',
-        gridTemplateColumns: showSearchInHeader ? '1fr minmax(auto, 600px) 1fr' : '1fr auto',
-        alignItems: 'center'
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: 1200,
+        mx: 'auto',
+        px: 2
       }}>
         {/* Left section - Logo */}
-        <Box sx={{ justifySelf: 'start' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {(!isHomePage || scrolled) && (
             <Typography
               variant="h6"
@@ -139,7 +143,8 @@ const Header: React.FC<HeaderProps> = ({
               display: 'flex',
               flexDirection: 'column',
               width: '100%',
-              justifySelf: 'center'
+              maxWidth: 600,
+              mx: 2
             }}
           >
             <TextField
@@ -159,6 +164,7 @@ const Header: React.FC<HeaderProps> = ({
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
                   color: 'text.primary',
+                  padding: '10px 14px',
                   '&.MuiOutlinedInput-root': {
                     '& fieldset': {
                       borderColor: 'transparent',
@@ -173,29 +179,7 @@ const Header: React.FC<HeaderProps> = ({
                 }
               }}
               variant="outlined"
-              sx={{ mb: 1 }}
             />
-            <Tabs
-              value={searchType}
-              onChange={handleSearchTypeChange}
-              textColor="primary"
-              indicatorColor="primary"
-              sx={{
-                minHeight: 36,
-                '& .MuiTab-root': {
-                  minHeight: 36,
-                  py: 0,
-                  color: 'text.primary',
-                  '&.Mui-selected': {
-                    color: 'primary.main',
-                  }
-                }
-              }}
-            >
-              <Tab label="Web" value="web" />
-              <Tab label="Images" value="image" />
-              <Tab label="Files" value="file" />
-            </Tabs>
           </Box>
         )}
 
@@ -203,7 +187,6 @@ const Header: React.FC<HeaderProps> = ({
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
-          justifySelf: 'end'
         }}>
           <Button
             component={Link}
@@ -287,6 +270,45 @@ const Header: React.FC<HeaderProps> = ({
           />
         </MenuItem>
       </Menu>
+      
+      {/* Search tabs below header */}
+      {showSearchInHeader && (
+        <Box 
+          sx={{ 
+            borderBottom: 1, 
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <Tabs
+            value={searchType}
+            onChange={handleSearchTypeChange}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{
+              minHeight: 48,
+              maxWidth: 600,
+              width: '100%',
+              '& .MuiTab-root': {
+                minHeight: 48,
+                color: 'text.primary',
+                '&.Mui-selected': {
+                  color: 'primary.main',
+                }
+              }
+            }}
+          >
+            <Tab label="Web" value="web" />
+            <Tab label="Images" value="image" />
+            <Tab label="Videos" value="video" />
+            <Tab label="News" value="news" />
+            <Tab label="Maps" value="map" />
+            <Tab label="Files" value="file" />
+          </Tabs>
+        </Box>
+      )}
     </AppBar>
   );
 };

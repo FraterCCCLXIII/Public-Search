@@ -8,9 +8,19 @@ A modern, user-friendly search interface for YaCy decentralized search engine wi
 
 Public Search provides a modern web interface for the YaCy decentralized search engine, focusing on privacy, user experience, and decentralization. The project consists of:
 
-1. **YaCy Backend**: A peer-to-peer distributed search engine that operates without central servers
+1. **YaCy Backend Integration**: Connects to the YaCy decentralized search engine that operates without central servers
 2. **Simple HTML/JS Interface**: Basic search interface (index.html, script.js, styles.css) for lightweight usage
 3. **Modern React UI**: Enhanced user interface with React, TypeScript, and Material UI with advanced features
+
+### Current Status
+
+This project is currently in development. The repository includes:
+
+- A React-based UI framework with TypeScript and Material UI
+- A simple HTML/JS interface for demonstration purposes
+- Integration points for the YaCy search engine (requires separate installation)
+
+The YaCy search engine is not included in this repository and needs to be installed separately following the instructions in the Installation Steps section.
 
 ### Why Public Search?
 
@@ -40,37 +50,50 @@ sudo apt install openjdk-11-jdk-headless ant git nodejs npm python3
 
 ## Installation Steps
 
-### 1. Clone and Build YaCy
+### 1. Clone the Repository
 ```bash
+git clone https://github.com/FraterCCCLXIII/Public-Search.git
+cd Public-Search
+```
+
+### 2. Install YaCy
+```bash
+# Clone YaCy repository
 git clone --depth 1 https://github.com/yacy/yacy_search_server.git yacy
 cd yacy
 ant clean all
 cd ..
 ```
 
-### 2. Start YaCy
+### 3. Start YaCy
 ```bash
 chmod +x setup.sh
 ./setup.sh
 ```
 
-### 3. Set Up and Run the React UI (Enhanced Interface)
+### 4. Set Up and Run the React UI (Enhanced Interface)
 ```bash
-cd yacy-ui
+# Install dependencies
 npm install
+
+# Start the development server
 npm start
 ```
 
-### 4. Alternative: Run the Simple HTML Interface
+### 5. Alternative: Run the Simple HTML Interface
 ```bash
 python3 server.py
 ```
 
 ## Access Points
 
-- **YaCy Admin Panel**: http://localhost:8090
-- **React UI (Enhanced Interface)**: http://localhost:12000
-- **Simple HTML Interface**: http://localhost:12000 (when using server.py)
+After completing the installation steps:
+
+- **YaCy Admin Panel**: http://localhost:8090 (after installing and starting YaCy)
+- **React UI (Enhanced Interface)**: http://localhost:12000 (when using `npm start`)
+- **Simple HTML Interface**: http://localhost:12000 (when using `python3 server.py`)
+
+Note: The React UI and Simple HTML Interface use the same port (12000) by default, so you should only run one at a time.
 
 ## Features
 
@@ -109,16 +132,24 @@ public-search/
 ├── script.js               # JavaScript for simple interface
 ├── styles.css              # CSS for simple interface
 ├── server.py               # Simple Python server
-├── yacy-ui/                # React UI implementation
-│   ├── public/             # Static assets
-│   ├── src/                # Source code
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Page components
-│   │   ├── theme/          # Theme configuration
-│   │   ├── App.tsx         # Main application component
-│   │   └── main.tsx        # Entry point
-│   ├── package.json        # Dependencies and scripts
-│   └── vite.config.js      # Vite configuration
+├── public/                 # Static assets
+├── src/                    # Source code
+│   ├── components/         # Reusable UI components
+│   │   ├── Header.tsx      # Navigation bar component
+│   │   ├── SearchForm.tsx  # Search input component
+│   │   ├── SearchResults.tsx # Results display component
+│   │   └── ThemeToggle.tsx # Theme switching component
+│   ├── pages/              # Page components
+│   │   ├── AboutPage.tsx   # About page component
+│   │   ├── HomePage.tsx    # Landing page component
+│   │   └── SearchPage.tsx  # Search results page component
+│   ├── theme/              # Theme configuration
+│   │   └── ThemeContext.tsx # Theme management
+│   ├── App.tsx             # Main application component
+│   └── index.tsx           # Entry point
+├── package.json            # Dependencies and scripts
+├── vite.config.js          # Vite configuration
+├── yacy/                   # YaCy search engine directory (empty by default)
 └── README.md               # Project documentation
 ```
 
@@ -147,25 +178,35 @@ public-search/
 - Server-side rendering friendly
 - Easy to customize and extend
 
+The simple interface is served using a Python HTTP server (server.py) that:
+- Runs on port 12000 by default
+- Enables CORS headers for API access
+- Serves static files from the project directory
+- Can be accessed from any host (0.0.0.0)
+
 ## Troubleshooting
+
+### Initial Setup Issues
+- The YaCy directory is empty by default. You need to clone the YaCy repository as described in the installation steps.
+- If you encounter permission issues with the scripts, make them executable with `chmod +x *.sh`
 
 ### YaCy Backend Issues
 - If YaCy fails to start, check Java version with `java -version` (requires Java 11+)
 - Ensure ports 8090, 8443, and 8080 are not in use by other applications
-- Check YaCy logs in the `yacy/DATA/LOG/` directory for specific error messages
+- After installing YaCy, check logs in the `yacy/DATA/LOG/` directory for specific error messages
 - Verify that your firewall allows YaCy to connect to the network
 
 ### React UI Issues
 - For React UI issues, check browser console logs (F12) for error messages
 - Ensure all dependencies are installed with `npm install`
 - Clear browser cache and reload if styles or scripts aren't updating
-- If port 12000 is in use, modify the port in `vite.config.js`
+- If port 12000 is in use, modify the port in `package.json` and `server.py`
 
 ### Search Functionality
 - If search results aren't appearing, ensure YaCy is running and properly indexed
 - For "Failed to fetch" errors, check that YaCy is accessible at http://localhost:8090
-- If external search isn't working, toggle the "Allow External Search" option in settings
-- For slow searches, consider increasing YaCy's memory allocation in `startYACY.sh`
+- The sample search data in `script.js` is for demonstration purposes only and doesn't connect to YaCy
+- For slow searches, consider increasing YaCy's memory allocation in `startYACY.sh` after installing YaCy
 
 ## Contributing
 
@@ -201,3 +242,7 @@ This project is open source and available under the [MIT License](LICENSE).
 - [React](https://reactjs.org/) and [Material UI](https://mui.com/) for the UI framework
 - [Inter Font](https://rsms.me/inter/) for the typography
 - All contributors who have helped shape this project
+
+---
+
+Last updated: May 20, 2025
